@@ -1,0 +1,57 @@
+# ------------------------
+# Python
+# ------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pyt
+
+# ------------------------
+# Virtual environment
+# ------------------------
+.venv/
+env/
+venv/
+ENV/
+*.egg-info/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ------------------------
+# Logs and runtime files
+# ------------------------
+logs/
+*.log
+
+# ------------------------
+# Screenshots and temporary data
+# ------------------------
+screenshots/
+*.tmp
+*.temp
+
+# ------------------------
+# PyInstaller / build
+# ------------------------
+dist/
+build/
+*.spec
+
+# ------------------------
+# IDE / editor files
+# ------------------------
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.DS_Store
+Thumbs.db
+
+# ------------------------
+# OS files
+# ------------------------
+desktop.ini
+*.lnk
