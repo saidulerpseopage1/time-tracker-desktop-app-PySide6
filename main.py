@@ -232,7 +232,7 @@ class TimeTrackerApp(QWidget):
         self.inactive_label.setText(f"Inactive: {self.format_running(total_inactive_current)}")
 
         # ---------- Screenshot Logic ----------
-        if self.is_running and self.next_screenshot_time is not None:
+        if self.is_running and self.next_screenshot_time is not None and self._inactive_start is None:
             if time.time() >= self.next_screenshot_time:
                 threading.Thread(target=self.take_screenshot, daemon=True).start()
                 self.schedule_next_screenshot(first=False)
