@@ -23,21 +23,17 @@ from pynput import mouse, keyboard
 from PIL import ImageGrab
 
 # ---------- Config ----------
-API_URL = "http://172.27.27.98:8000/api/store-time-tracking"
-DEFAULT_USER_ID = 10
-DEFAULT_TASK_ID = 1
-
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-
-LOG_DIR = os.path.join(BASE_DIR, "logs")
-SCREENSHOT_DIR = os.path.join(BASE_DIR, "screenshots")
+from config.settings import (
+    API_URL,
+    DEFAULT_USER_ID,
+    DEFAULT_TASK_ID,
+    LOG_DIR,
+    SCREENSHOT_DIR,
+    INACTIVITY_THRESHOLD
+)
 
 os.makedirs(LOG_DIR, exist_ok=True)
 os.makedirs(SCREENSHOT_DIR, exist_ok=True)
-
-# Idle threshold (seconds) after which inactivity is counted
-INACTIVITY_THRESHOLD = 60  # 1 minute
-
 
 # ---------- Helpers ----------
 def save_daily_log(total_seconds: int, inactive_seconds: int, user_id=DEFAULT_USER_ID, task_id=DEFAULT_TASK_ID):
