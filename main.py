@@ -36,32 +36,7 @@ os.makedirs(LOG_DIR, exist_ok=True)
 os.makedirs(SCREENSHOT_DIR, exist_ok=True)
 
 # ---------- Helpers ----------
-def save_daily_log(total_seconds: int, inactive_seconds: int, user_id=DEFAULT_USER_ID, task_id=DEFAULT_TASK_ID):
-    """Append seconds to today's log (sum). Stores both total and inactive seconds."""
-    date_str = datetime.now().strftime("%Y-%m-%d")
-    file_path = os.path.join(LOG_DIR, f"{date_str}.json")
-
-    if os.path.exists(file_path):
-        with open(file_path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-    else:
-        data = {"total_seconds": 0, "inactive_seconds": 0, "entries": []}
-
-    data["total_seconds"] += int(total_seconds)
-    data["inactive_seconds"] += int(inactive_seconds)
-    data["entries"].append({
-        "user_id": user_id,
-        "task_id": task_id,
-        "timestamp": datetime.now().isoformat(),
-        "seconds": int(total_seconds),
-        "inactive_seconds": int(inactive_seconds)
-    })
-
-    with open(file_path, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
-
-    return file_path, data
-
+from services.log_service import save_daily_log
 
 def upload_to_api(user_id, task_id, date_str, total_seconds, inactive_seconds=0):
     """Upload payload to API."""
@@ -281,7 +256,7 @@ class TimeTrackerApp(QWidget):
         inactive_total = int(self._inactive_accumulated)
 
         if total > 0:
-            file_path, data = save_daily_log(total, inactive_total)
+            file_path, data = save_daily_log(total, inactive_total, DEFAULT_USER_ID, DEFAULT_TASK_ID)
 
             self._start_time = None
             self._accumulated = 0
