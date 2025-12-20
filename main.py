@@ -7,7 +7,6 @@ import glob
 import random
 from datetime import datetime
 import threading
-import requests
 
 # GUI (PySide6)
 from PySide6.QtWidgets import (
@@ -37,7 +36,7 @@ os.makedirs(SCREENSHOT_DIR, exist_ok=True)
 
 # ---------- Helpers ----------
 from services.log_service import save_daily_log
-from services.api_service import upload_to_api
+from viewmodels.tracker_viewmodel import TrackerViewModel
 
 # ---------- Main UI ----------
 class TimeTrackerApp(QWidget):
@@ -111,6 +110,10 @@ class TimeTrackerApp(QWidget):
         self.btn_upload.clicked.connect(self.upload_today_logs)
 
         self.load_logs_to_view()
+
+        # Load model
+        self.vm = TrackerViewModel()
+
 
     # ---------- Screenshot Logic ----------
     def schedule_next_screenshot(self, first=False):
@@ -263,8 +266,12 @@ class TimeTrackerApp(QWidget):
 
     # ---------- Upload ----------
     def _background_upload_single(self, user_id, task_id, seconds, inactive_seconds):
-        date_str = datetime.now().strftime("%Y-%m-%d")
-        ok, resp = upload_to_api(user_id, task_id, date_str, seconds, inactive_seconds)
+        ok, resp = self.vm.upload_single_log(
+            user_id,
+            task_id,
+            seconds,
+            inactive_seconds
+        )
         print("Upload response:", resp)
 
     def upload_today_logs(self):
@@ -293,7 +300,13 @@ class TimeTrackerApp(QWidget):
             ).start()
 
     def _do_upload_thread(self, user_id, task_id, date_str, total_seconds, inactive_seconds):
-        ok, resp = upload_to_api(user_id, task_id, date_str, total_seconds, inactive_seconds)
+        ok, resp = self.vm.upload_log_by_date(
+            user_id,
+            task_id,
+            date_str,
+            total_seconds,
+            inactive_seconds
+        )
         self._notify_main_thread("Upload Result", str(resp))
 
     def _notify_main_thread(self, title, msg):
